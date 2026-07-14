@@ -18,6 +18,20 @@ npx ilovevideoeditor render video.json -o out.mp4
 brew tap ilovevideoeditor/tap
 brew install ilovevideoeditor
 
+# Scoop (Windows)
+scoop bucket add ilovevideoeditor https://github.com/ilovevideoeditor/scoop-bucket
+scoop install ilovevideoeditor
+
+# winget (Windows) — pending microsoft/winget-pkgs#402460
+winget install ilovevideoeditor
+
+# Docker (GHCR)
+docker run --rm -e ILOVEVIDEOEDITOR_API_KEY -v "$PWD:/work" \
+  ghcr.io/ilovevideoeditor/cli render video.json -o out.mp4
+
+# Arch Linux (AUR, source-based)
+yay -S ilovevideoeditor
+
 # npm (requires Node.js 18+)
 npm install -g ilovevideoeditor
 
