@@ -1,0 +1,69 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install
+
+      - id: meta
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Compile binaries
+        run: |
+          bun build --compile --target=bun-linux-x64 src/cli.ts --outfile ilovevideoeditor-linux-x64
+          bun build --compile --target=bun-windows-x64 src/cli.ts --outfile ilovevideoeditor-windows-x64.exe
+
+      - name: Smoke test linux binary
+        run: |
+          ./ilovevideoeditor-linux-x64 version | grep "${{ steps.meta.outputs.version }}"
+          ./ilovevideoeditor-linux-x64 help
+
+      - name: Checksums
+        run: |
+          sha256sum ilovevideoeditor-linux-x64 > ilovevideoeditor-linux-x64.sha256
+          sha256sum ilovevideoeditor-windows-x64.exe > ilovevideoeditor-windows-x64.exe.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: ilovevideoeditor-*
+          if-no-files-found: error
+
+  smoke-windows:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: binaries
+
+      - shell: pwsh
+        run: |
+          .\ilovevideoeditor-windows-x64.exe version
+          .\ilovevideoeditor-windows-x64.exe help
+
+  release:
+    needs: [build, smoke-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: binaries
+
+      - name: Create GitHub release
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --latest ilovevideoeditor-*
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
