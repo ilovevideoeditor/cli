@@ -25,9 +25,10 @@ scoop install ilovevideoeditor
 # winget (Windows) — pending microsoft/winget-pkgs#402460
 winget install ilovevideoeditor
 
-# Docker (GHCR)
+# Docker (Docker Hub or GHCR — multi-arch: amd64 + arm64)
 docker run --rm -e ILOVEVIDEOEDITOR_API_KEY -v "$PWD:/work" \
-  ghcr.io/ilovevideoeditor/cli render video.json -o out.mp4
+  ilovevideoeditor/cli render video.json -o out.mp4
+# or: ghcr.io/ilovevideoeditor/cli render video.json -o out.mp4
 
 # Arch Linux (AUR, source-based)
 yay -S ilovevideoeditor
@@ -40,7 +41,8 @@ npx ilovevideoeditor --help
 ```
 
 Get an API key from the
-[dashboard](https://ilovevideoeditor.com/dashboard).
+[dashboard](https://ilovevideoeditor.com/dashboard). All install channels are
+listed at [ilovevideoeditor.com/install](https://ilovevideoeditor.com/install).
 
 ## Commands
 
