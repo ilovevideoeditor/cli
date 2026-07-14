@@ -1,0 +1,43 @@
+{
+  "name": "ilovevideoeditor",
+  "version": "1.0.0",
+  "description": "Official CLI for iLoveVideoEditor — render videos from VideoJSON specs in your terminal or CI",
+  "type": "module",
+  "bin": {
+    "ilovevideoeditor": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "postbuild": "node scripts/fix-esm-imports.mjs dist"
+  },
+  "keywords": [
+    "video",
+    "video-rendering",
+    "video-api",
+    "video-generation",
+    "cli",
+    "ci-cd",
+    "ilovevideoeditor"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilovevideoeditor/cli.git"
+  },
+  "homepage": "https://ilovevideoeditor.com",
+  "dependencies": {
+    "@ilovevideoeditor/sdk-node": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.0.1",
+    "typescript": "7.0.1-rc"
+  }
+}
